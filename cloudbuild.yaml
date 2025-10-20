@@ -23,7 +23,7 @@ steps:
     args:
       - "run"
       - "deploy"
-      - "pqrs-dummy-api"
+      - "pqrs-token-gen"
       - "--image"
       - "us-central1-docker.pkg.dev/${PROJECT_ID}/ia-repo-servinformacion/pqrs-token-gen"
       - "--region"
