@@ -47,17 +47,16 @@ def generate_oauth_token():
     except Exception as e:
         raise Exception(f"Error generando token OAuth2 (PRD): {str(e)}")
 
-@app.get("/get-oauth-token")
-async def get_token():
+@app.get("/api/get-oauth-token")
+async def get_oauth_token():
     """Endpoint principal que devuelve el token OAuth2"""
     try:
         token = generate_oauth_token()
         return JSONResponse({
             "status": "success",
             "token": token,
-            "message": "Token OAuth2 generado exitosamente (PRODUCCIÓN)",
+            "message": "Token OAuth2 generado exitosamente",
             "scopes": ['https://www.googleapis.com/auth/cloud-platform'],
-            "project": "compensar-pqrs-salud"
         })
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generando token: {str(e)}")
