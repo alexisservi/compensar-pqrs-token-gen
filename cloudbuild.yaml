@@ -1,0 +1,54 @@
+steps:
+  # Build the container image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/${PROJECT_ID}/ia-repo-servinformacion/pqrs-token-gen",
+        ".",
+      ]
+
+  # Push the container image to Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/${PROJECT_ID}/ia-repo-servinformacion/pqrs-token-gen",
+      ]
+
+  # Deploy container image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "pqrs-dummy-api"
+      - "--image"
+      - "us-central1-docker.pkg.dev/${PROJECT_ID}/ia-repo-servinformacion/pqrs-token-gen"
+      - "--region"
+      - "us-central1"
+      - "--platform"
+      - "managed"
+      - "--allow-unauthenticated"
+      - "--port"
+      - "8080"
+      - "--memory"
+      - "2Gi"
+      - "--cpu"
+      - "2"
+      - "--max-instances"
+      - "10"
+      - "--min-instances"
+      - "0"
+      - "--timeout"
+      - "10"
+      - "--concurrency"
+      - "80"
+
+images:
+  - "us-central1-docker.pkg.dev/${PROJECT_ID}/ia-repo-servinformacion/pqrs-token-gen"
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: "600s" # 10 minutes for building
